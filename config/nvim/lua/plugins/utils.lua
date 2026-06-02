@@ -13,6 +13,10 @@ return {
                     { "name", "asc" },
                 }
             },
+            win_options = {
+                signcolumn = "yes:2",
+                statuscolumn = "",
+            },
         },
         -- Optional dependencies
         -- dependencies = { { "nvim-mini/mini.icons", opts = {} } },
