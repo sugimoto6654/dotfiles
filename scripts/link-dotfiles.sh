@@ -28,13 +28,14 @@ link_file() {
     echo "linked: $dest -> $src"
 }
 
-DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+DOTFILES="$(cd "${SCRIPT_DIR}/.." && pwd)"
 
 echo "dotfiles directory: ${DOTFILES}"
 
 link_file "${DOTFILES}/zsh/.zshrc" "${HOME}/.zshrc"
 link_file "${DOTFILES}/zsh/.zshrc.local" "${HOME}/.zshrc.local"
 link_file "${DOTFILES}/config/nvim" "${HOME}/.config/nvim"
-link_file "${DOTFILES}/config/wezterm" "${HOME}/.config/wezterm"
+# link_file "${DOTFILES}/config/wezterm" "${HOME}/.config/wezterm"
 link_file "${DOTFILES}/config/starship.toml" "${HOME}/.config/starship.toml"
 # link_file "${DOTFILES}/tmux.conf" "${HOME}/.tmux.conf"
