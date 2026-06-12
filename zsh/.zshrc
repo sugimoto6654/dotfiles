@@ -103,8 +103,9 @@ function ghq-fzf-cd() {
   fi
 
   local repo
+  local repo_path
   zle -I
-  repo="$(ghq list -p | fzf --prompt='ghq> ')" || {
+  repo="$(ghq list | fzf --prompt='ghq> ')" || {
     zle reset-prompt
     return 0
   }
@@ -114,7 +115,12 @@ function ghq-fzf-cd() {
     return 0
   }
 
-  cd "$repo" || {
+  repo_path="$(ghq list -p --exact "$repo")" || {
+    zle reset-prompt
+    return 1
+  }
+
+  cd "$repo_path" || {
     zle reset-prompt
     return 1
   }
@@ -122,7 +128,7 @@ function ghq-fzf-cd() {
   zle reset-prompt
 }
 zle -N ghq-fzf-cd
-bindkey '^[' ghq-fzf-cd
+bindkey '^]' ghq-fzf-cd
 
 # thefuck
 eval $(thefuck --alias)
