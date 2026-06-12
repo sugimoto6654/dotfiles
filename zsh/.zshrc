@@ -90,6 +90,40 @@ function find_cd() {
 zle -N find_cd
 bindkey '^X' find_cd
 
+## ghq 管理リポジトリ検索・移動
+function ghq-fzf-cd() {
+  if ! command -v ghq >/dev/null 2>&1; then
+    zle -M 'ghq is not installed.'
+    return 1
+  fi
+
+  if ! command -v fzf >/dev/null 2>&1; then
+    zle -M 'fzf is not installed.'
+    return 1
+  fi
+
+  local repo
+  zle -I
+  repo="$(ghq list -p | fzf --prompt='ghq> ')" || {
+    zle reset-prompt
+    return 0
+  }
+
+  [[ -n "$repo" ]] || {
+    zle reset-prompt
+    return 0
+  }
+
+  cd "$repo" || {
+    zle reset-prompt
+    return 1
+  }
+
+  zle reset-prompt
+}
+zle -N ghq-fzf-cd
+bindkey '^[' ghq-fzf-cd
+
 # thefuck
 eval $(thefuck --alias)
 
@@ -137,4 +171,3 @@ export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 eval "$(starship init zsh)"
 
 [[ -f ~/.zshrc.local ]] && source ~/.zshrc.local
-
