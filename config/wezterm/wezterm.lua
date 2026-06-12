@@ -1,4 +1,5 @@
 local wezterm = require 'wezterm'
+local act = wezterm.action
 
 local config = wezterm.config_builder()
 
@@ -27,6 +28,33 @@ config.colors = {
     inactive_tab_edge = "none",
   },
 }
+
+local ghq_fzf_command = [[
+if ! command -v ghq >/dev/null 2>&1; then
+  echo 'ghq is not installed.'
+  exec "${SHELL:-zsh}" -l
+fi
+
+if ! command -v fzf >/dev/null 2>&1; then
+  echo 'fzf is not installed.'
+  exec "${SHELL:-zsh}" -l
+fi
+
+repo="$(ghq list -p | fzf --prompt='ghq> ')" || exec "${SHELL:-zsh}" -l
+cd "$repo" || exec "${SHELL:-zsh}" -l
+exec "${SHELL:-zsh}" -l
+]]
+
+config.keys = {
+  {
+    key = '[',
+    mods = 'CTRL',
+    action = act.SpawnCommandInNewTab {
+      args = { 'zsh', '-lc', ghq_fzf_command },
+    },
+  },
+}
+
 local SOLID_LEFT_ARROW = wezterm.nerdfonts.ple_lower_right_triangle
 local SOLID_RIGHT_ARROW = wezterm.nerdfonts.ple_upper_left_triangle
 

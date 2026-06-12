@@ -29,6 +29,8 @@ DOTFILES="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 
 echo "dotfiles directory: ${DOTFILES}"
 
+link_file "${DOTFILES}/zsh/.zshrc" "${HOME}/.zshrc"
+link_file "${DOTFILES}/zsh/.zshrc.local" "${HOME}/.zshrc.local"
 link_file "${DOTFILES}/config/nvim" "${HOME}/.config/nvim"
 link_file "${DOTFILES}/config/wezterm" "${HOME}/.config/wezterm"
 link_file "${DOTFILES}/config/starship.toml" "${HOME}/.config/starship.toml"
