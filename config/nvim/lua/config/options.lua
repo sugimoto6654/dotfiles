@@ -1,6 +1,7 @@
 local opt = vim.opt
 
 opt.number = true
+opt.relativenumber = true
 opt.wrap = false
 opt.showcmd = true
 opt.wildmenu = true
