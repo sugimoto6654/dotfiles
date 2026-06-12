@@ -22,7 +22,7 @@ opt.foldenable = false
 
 opt.clipboard = 'unnamed'
 opt.foldmethod = 'indent'
-opt.whichwrap = 'h', 'l'
+opt.whichwrap = 'h,l'
 opt.backspace = '2'
 opt.backspace = {'indent', 'eol', 'start'}
 opt.list = true
