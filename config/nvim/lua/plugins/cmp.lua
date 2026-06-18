@@ -14,6 +14,10 @@ return {
       local luasnip = require("luasnip")
 
       cmp.setup({
+        preselect = cmp.PreselectMode.None,
+        completion = {
+          completeopt = "menu,menuone,noinsert,noselect",
+        },
         snippet = {
           expand = function(args)
             luasnip.lsp_expand(args.body)
@@ -21,7 +25,13 @@ return {
         },
         mapping = cmp.mapping.preset.insert({
           ["<C-Space>"] = cmp.mapping.complete(),
-          ["<CR>"] = cmp.mapping.confirm({ select = true }),
+          ["<CR>"] = cmp.mapping(function(fallback)
+            if cmp.visible() and cmp.get_active_entry() then
+              cmp.confirm({ select = false })
+            else
+              fallback()
+            end
+          end, { "i", "s" }),
           ["<Tab>"] = cmp.mapping(function(fallback)
             if cmp.visible() then
               cmp.select_next_item()
