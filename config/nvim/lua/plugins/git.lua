@@ -15,10 +15,20 @@ return {
         max_unstages = 5,
       },
 
-      -- ignored も表示する。大量に出て重い/うるさい場合は false にする
+      -- ignored まで拾うと repo 全体の走査が重くなりやすいため表示しない
       show_ignored = function()
-        return true
+        return false
       end,
+
+      -- 未追跡ファイルの再帰的な全列挙を避け、oil 表示時の git status を軽くする
+      git_shell_cmd = {
+        "git",
+        "-c",
+        "status.relativePaths=false",
+        "status",
+        "--short",
+        "--untracked-files=normal",
+      },
 
       keymaps = {
         {
