@@ -20,7 +20,7 @@ keymap.set('n', 'k', 'gk')
 
 keymap.set('n', '<Tab>', ':BufferNext<CR>')
 keymap.set('n', '<S-Tab>', ':BufferPrevious<CR>')
--- keymap.set('n', '<leader>d', ':bd<CR>')
+keymap.set('n', '<leader>d', ':BufferClose<CR>')
 
 keymap.set('n', 'x', '"_x')
 keymap.set('n', 'c', '"_c')
