@@ -16,6 +16,11 @@ opt.tabstop = 4
 opt.shiftwidth = 4
 opt.autoindent = true
 
+vim.g.python_indent = {
+  open_paren = "shiftwidth()",
+  closed_paren_align_last_line = false,
+}
+
 opt.incsearch = true
 opt.ignorecase = true
 opt.smartcase = true

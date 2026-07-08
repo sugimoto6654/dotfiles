@@ -1,45 +1,130 @@
--- lua/plugins/neo-tree.lua
 return {
     {
-        'stevearc/oil.nvim',
-        ---@module 'oil'
-        ---@type oil.SetupOpts
-        opts = {
-            view_options = {
-                show_hidden = true,
-                natural_order = true,
-                sort = {
-                    { "type", "asc" },
-                    { "name", "asc" },
-                }
+        "nvim-neo-tree/neo-tree.nvim",
+        branch = "v3.x",
+        dependencies = {
+            "nvim-lua/plenary.nvim",
+            "nvim-tree/nvim-web-devicons",
+            "MunifTanjim/nui.nvim",
+        },
+        lazy = false,
+        keys = {
+            {
+                "<leader>e",
+                function()
+                    require("neo-tree.command").execute({
+                        action = "focus",
+                        source = "filesystem",
+                        position = "left",
+                        reveal = true,
+                    })
+                end,
+                desc = "Focus file tree",
             },
-            win_options = {
-                signcolumn = "yes:2",
-                statuscolumn = "",
+            {
+                "<leader>E",
+                function()
+                    require("neo-tree.command").execute({
+                        source = "filesystem",
+                        position = "left",
+                        reveal = true,
+                    })
+                end,
+                desc = "Reveal current file in tree",
+            },
+            {
+                "<leader>b",
+                function()
+                    require("neo-tree.command").execute({
+                        toggle = true,
+                        source = "buffers",
+                        position = "left",
+                    })
+                end,
+                desc = "Toggle buffer tree",
+            },
+            {
+                "<leader>g",
+                function()
+                    require("neo-tree.command").execute({
+                        toggle = true,
+                        source = "git_status",
+                        position = "left",
+                    })
+                end,
+                desc = "Toggle git status tree",
             },
         },
-        -- Optional dependencies
-        -- dependencies = { { "nvim-mini/mini.icons", opts = {} } },
-        dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if you prefer nvim-web-devicons
-        -- Lazy loading is not recommended because it is very tricky to make it work correctly in all situations.
-        lazy = false,
+        opts = {
+            close_if_last_window = true,
+            enable_git_status = true,
+            enable_diagnostics = true,
+            source_selector = {
+                winbar = true,
+                statusline = false,
+            },
+            default_component_configs = {
+                git_status = {
+                    symbols = {
+                        added = "A",
+                        modified = "M",
+                        deleted = "D",
+                        renamed = "R",
+                        untracked = "?",
+                        ignored = "!",
+                        unstaged = "U",
+                        staged = "S",
+                        conflict = "C",
+                    },
+                },
+            },
+            window = {
+                position = "left",
+                width = 36,
+                mappings = {
+                    ["<space>"] = { "toggle_node", nowait = false },
+                    ["<tab>"] = "next_source",
+                    ["<cr>"] = "open",
+                    ["l"] = "open",
+                    ["h"] = "close_node",
+                    ["S"] = "open_split",
+                    ["s"] = "open_vsplit",
+                    ["t"] = "open_tabnew",
+                    ["P"] = { "toggle_preview", config = { use_float = true } },
+                    ["R"] = "refresh",
+                    ["a"] = { "add", config = { show_path = "relative" } },
+                    ["A"] = "add_directory",
+                    ["d"] = "delete",
+                    ["r"] = "rename",
+                    ["y"] = "copy_to_clipboard",
+                    ["x"] = "cut_to_clipboard",
+                    ["p"] = "paste_from_clipboard",
+                    ["q"] = "close_window",
+                    ["?"] = "show_help",
+                    ["<leader>e"] = function()
+                        local ok, neo_tree = pcall(require, "neo-tree")
+                        local winid = ok and neo_tree.get_prior_window() or -1
 
-        vim.keymap.set("n", "<leader>e", function()
-            require("oil").open()
-        end, { desc = "Open Oil floating window" }),
-
-        vim.keymap.set("n", "<leader>d", function()
-            local prev_buf = vim.api.nvim_get_current_buf()
-            local modified = vim.bo[prev_buf].modified
-
-            require("oil").open()
-
-            vim.schedule(function()
-                if vim.api.nvim_buf_is_valid(prev_buf) and not modified then
-                    vim.cmd("bdelete " .. prev_buf)
-                end
-            end)
-        end, { desc = "Oil current buffer's directory" }),
+                        if winid > 0 then
+                            vim.api.nvim_set_current_win(winid)
+                        else
+                            vim.cmd.wincmd("p")
+                        end
+                    end,
+                },
+            },
+            filesystem = {
+                bind_to_cwd = true,
+                follow_current_file = {
+                    enabled = true,
+                },
+                filtered_items = {
+                    visible = true,
+                    hide_dotfiles = false,
+                    hide_gitignored = false,
+                },
+            },
+        },
     },
 
     {

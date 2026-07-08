@@ -18,8 +18,8 @@ keymap.set('n', '<C-Y>', '<C-e>')
 keymap.set('n', 'j', 'gj')
 keymap.set('n', 'k', 'gk')
 
-keymap.set('n', '<Tab>', ':bnext<CR>')
-keymap.set('n', '<S-Tab>', ':bprev<CR>')
+keymap.set('n', '<Tab>', ':BufferNext<CR>')
+keymap.set('n', '<S-Tab>', ':BufferPrevious<CR>')
 -- keymap.set('n', '<leader>d', ':bd<CR>')
 
 keymap.set('n', 'x', '"_x')

@@ -64,6 +64,18 @@ return {
     "nvim-lualine/lualine.nvim",
     dependencies = { "nvim-tree/nvim-web-devicons" },
     config = function()
+      local function os_icon()
+        local sysname = vim.uv.os_uname().sysname
+        if sysname == "Darwin" then
+          return ""
+        elseif sysname == "Linux" then
+          return ""
+        elseif sysname:match("Windows") then
+          return ""
+        end
+        return sysname
+      end
+
       require("lualine").setup({
         options = {
           icons_enabled = true,
@@ -84,7 +96,7 @@ return {
           ignore_focus = {},
           always_divide_middle = true,
           always_show_tabline = true,
-          globalstatus = false,
+          globalstatus = true,
           refresh = {
             statusline = 1000,
             tabline = 1000,
@@ -108,7 +120,7 @@ return {
           lualine_a = { "mode" },
           lualine_b = { "branch", "diff", "diagnostics" },
           lualine_c = { "filename" },
-          lualine_x = { "encoding", "fileformat", "filetype" },
+          lualine_x = { "encoding", os_icon, "filetype" },
           lualine_y = { "progress" },
           lualine_z = { "location" },
         },
@@ -120,11 +132,41 @@ return {
           lualine_y = {},
           lualine_z = {},
         },
-        tabline = {
-          lualine_a = { "buffers" },
-        }
       })
     end,
+  },
+
+  ----- Barbar Bufferline -----
+  {
+    "romgrk/barbar.nvim",
+    dependencies = {
+      "nvim-tree/nvim-web-devicons",
+    },
+    init = function()
+      vim.g.barbar_auto_setup = false
+    end,
+    opts = {
+      animation = false,
+      exclude_ft = { "neo-tree" },
+      focus_on_close = "previous",
+      highlight_inactive_file_icons = true,
+      highlight_visible = true,
+      maximum_length = 28,
+      maximum_padding = 2,
+      minimum_padding = 1,
+      icons = {
+        buffer_index = false,
+        buffer_number = false,
+        button = "×",
+        filetype = { enabled = true },
+        modified = { button = "●" },
+        separator = { left = "", right = "" },
+        separator_at_end = false,
+        scroll = { left = "‹", right = "›" },
+      },
+    },
+    lazy = false,
+    version = "^1.0.0",
   },
 
   ----- Which-Key -----
