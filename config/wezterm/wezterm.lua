@@ -9,53 +9,79 @@ config.use_ime = true
 config.audible_bell = "Disabled"
 config.window_background_opacity = 0.75
 config.macos_window_background_blur = 20
-config.window_decorations = 'RESIZE'
 config.hide_tab_bar_if_only_one_tab = true
 config.color_scheme = 'Catppuccin Mocha'
+
+-- ~/.ssh/config の Host エントリから ssh_domains を自動生成する
+config.ssh_domains = wezterm.default_ssh_domains()
+
+-- ShowLauncher は既定でキーバインドが無いため追加する
+config.keys = {
+  { key = '9', mods = 'CTRL|SHIFT', action = wezterm.action.ShowLauncher },
+}
 
 config.window_frame = {
   inactive_titlebar_bg = "none",
   active_titlebar_bg = "none",
+  -- タブバー（fancy tab bar）のフォント。指定しないとNerd Fontアイコンが正しい幅で
+  -- 描画されず、文字と被って見えるため本体と同じフォントを指定する
+  font = wezterm.font("Hack Nerd Font"),
+  -- タブバーの文字サイズ。既定は10.0でやや小さいので少し大きくする
+  font_size = 12.0,
 }
 config.window_background_gradient = {
   colors = { "#000000" }
 }
-config.show_new_tab_button_in_tab_bar = false
 config.show_close_tab_button_in_tabs = false
-config.colors = {
-  tab_bar = {
-    inactive_tab_edge = "none",
+config.tab_bar_at_bottom = false
+
+local tabline = wezterm.plugin.require("https://github.com/michaelbrusegard/tabline.wez")
+
+tabline.setup({
+  options = {
+    icons_enabled = true,
+    theme = 'Catppuccin Mocha',
+    tabs_enabled = true,
+    -- 斜めの powerline 風グリフをやめ、四角い形のタブにする
+    tab_separators = {
+      left = '',
+      right = '',
+    },
+    -- NORMAL/default など左端セクション間の区切りも同様に四角くする
+    section_separators = {
+      left = '',
+      right = '',
+    },
+    component_separators = {
+      left = '',
+      right = '',
+    },
   },
-}
+  sections = {
+    tabline_a = {},
+    tabline_b = {},
+    tabline_c = {},
+    tab_active = {
+      'index',
+      { 'process', padding = { left = 0, right = 1 } },
+    },
+    tab_inactive = {
+      'index',
+      { 'process', padding = { left = 0, right = 1 } },
+    },
+    -- CPU/RAM は負荷状況、hostname/domain は接続先を示すグループとして分ける
+    tabline_x = { 'cpu', 'ram' },
+    tabline_y = { 'battery' },
+    tabline_z = { 'domain' },
+  },
+})
 
-local SOLID_LEFT_ARROW = wezterm.nerdfonts.ple_lower_right_triangle
-local SOLID_RIGHT_ARROW = wezterm.nerdfonts.ple_upper_left_triangle
+tabline.apply_to_config(config)
 
-wezterm.on("format-tab-title", function(tab, tabs, panes, config, hover, max_width)
-  local background = "#5c6d74"
-  local foreground = "#ffffff"
-  local edge_background = "none"
-
-  if tab.is_active then
-    background = "#ae8d2d"
-    foreground = "#ffffff"
-  end
-
-  local edge_foreground = background
-  local title = "   " .. wezterm.truncate_right(tab.active_pane.title, max_width - 1) .. "   "
-
-  return {
-    { Background = { Color = edge_background } },
-    { Foreground = { Color = edge_foreground } },
-    { Text = SOLID_LEFT_ARROW },
-    { Background = { Color = background } },
-    { Foreground = { Color = foreground } },
-    { Text = title },
-    { Background = { Color = edge_background } },
-    { Foreground = { Color = edge_foreground } },
-    { Text = SOLID_RIGHT_ARROW },
-  }
-end)
+-- tabline.wez は apply_to_config 内で use_fancy_tab_bar = false にしてしまうため、
+-- window_frame.font_size が効かない（retro tab bar はターミナル本体と同じフォントサイズになる）。
+-- fancy tab bar に戻すことで window_frame.font_size を有効化する。
+config.use_fancy_tab_bar = true
 
 -- tmux/vim/nvim 等が有効化した mouse reporting を解除する
 local function disable_mouse_reporting(pane)
