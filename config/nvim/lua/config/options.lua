@@ -34,6 +34,9 @@ opt.backspace = {'indent', 'eol', 'start'}
 opt.list = true
 opt.listchars = {tab = '>-', eol = '↲'}
 
+-- コマンドライン用の行をなくし、lualine(globalstatus)をterminal最下端に揃える
+opt.cmdheight = 0
+
 -- make parmament undo history
 local home = os.getenv("HOME")
 if not vim.fn.isdirectory(vim.fn.expand(home .. "/.config/nvim/undodir")) then
