@@ -27,11 +27,15 @@ return {
     config = function(_, opts)
       require("image").setup(opts)
 
-      local function resize_image(delta)
-        local image = require("image").get_images({
-          window = 0,
+      local function current_image()
+        return require("image").get_images({
+          window = vim.api.nvim_get_current_win(),
           buffer = vim.api.nvim_get_current_buf(),
         })[1]
+      end
+
+      local function resize_image(delta)
+        local image = current_image()
 
         if not image then
           return
@@ -60,10 +64,7 @@ return {
             resize_image(-5)
           end, { buffer = event.buf, desc = "画像を縮小" })
           vim.keymap.set("n", "0", function()
-            local image = require("image").get_images({
-              window = 0,
-              buffer = event.buf,
-            })[1]
+            local image = current_image()
             if image then
               image:render({ width = 0, height = 0 })
             end
