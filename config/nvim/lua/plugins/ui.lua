@@ -15,6 +15,9 @@ return {
           only_render_image_at_cursor_mode = "popup",
         },
       },
+      -- 既定値はウィンドウ高の 50% で、縦横比維持時に横幅も制限される。
+      -- キー操作でウィンドウ全体まで拡大できるようにする。
+      max_height_window_percentage = 100,
       hijack_file_patterns = {
         "*.png",
         "*.jpg",
