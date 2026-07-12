@@ -15,8 +15,8 @@ return {
           only_render_image_at_cursor_mode = "popup",
         },
       },
-      -- 既定値はウィンドウ高の 50% で、縦横比維持時に横幅も制限される。
-      -- キー操作でウィンドウ全体まで拡大できるようにする。
+      -- 初回表示は元画像の 50% とし、キー操作でウィンドウ全体まで拡大できるようにする。
+      scale_factor = 0.5,
       max_height_window_percentage = 100,
       hijack_file_patterns = {
         "*.png",
@@ -53,6 +53,13 @@ return {
           width = math.max(1, width + delta),
           height = 0, -- 縦横比を維持する
         })
+
+        -- image.nvim が上限に合わせて実際に描画した幅を次の基準値にする。
+        -- これにより、上限を超えて拡大を試みた後も 1 回の縮小で小さくなる。
+        local rendered_width = image.rendered_geometry.width
+        if rendered_width and rendered_width ~= image.geometry.width then
+          image:render({ width = rendered_width, height = 0 })
+        end
       end
 
       local group = vim.api.nvim_create_augroup("image_nvim_keymaps", { clear = true })
