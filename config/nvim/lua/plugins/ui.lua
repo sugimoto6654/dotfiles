@@ -1,5 +1,14 @@
 return {
   {
+    "MeanderingProgrammer/render-markdown.nvim",
+    ft = { "markdown" },
+    dependencies = {
+      "nvim-treesitter/nvim-treesitter",
+      "nvim-tree/nvim-web-devicons",
+    },
+    opts = {},
+  },
+  {
     "3rd/image.nvim",
     -- 画像ファイルを直接開いた場合にも表示を差し替えるため、起動時に読み込む
     lazy = false,
